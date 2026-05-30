@@ -1,0 +1,22 @@
+# Virtual environment (isolated dependencies)
+.venv/
+venv/
+ENV/
+env/
+
+# Log files (runtime metrics and errors)
+*.log
+
+# Local data dumps (raw scraped files)
+*.json
+
+# Python bytecode and cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# IDE settings
+.vscode/
+.idea/
