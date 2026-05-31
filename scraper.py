@@ -12,12 +12,20 @@ logging.basicConfig(
         logging.StreamHandler()                              
     ]
 )
-URL = "https://www.otodom.pl/pl/wyniki/sprzedaz/mieszkanie%2C2-pokoje/mazowieckie/warszawa/warszawa/warszawa?limit=36&ownerTypeSingleSelect=ALL&priceMax=600000&by=DEFAULT&direction=DESC"
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 }
 
-response_default = requests.get(URL,headers=HEADERS)
+filters = {}
+filters['priceMax'] = 600000
+filters['roomNumbers'] = 2
+filters['roomForm'] = "pokoje" if filters['roomNumbers'] > 1 else "pokojowe"
+filters['city'] = "warszawa"
+filters['province'] = "mazowieckie"
+
+URL_w_filters = f"https://www.otodom.pl/pl/wyniki/sprzedaz/mieszkanie%2C{filters.get('roomNumbers')}-{filters.get('roomForm')}/{filters.get('province')}/{filters.get('city')}/{filters.get('city')}/{filters.get('city')}?limit=36&ownerTypeSingleSelect=ALL&priceMax={filters.get('priceMax')}&by=DEFAULT&direction=DESC"
+
+response_default = requests.get(URL_w_filters,headers=HEADERS)
 soup_default = BeautifulSoup(response_default.text,'html.parser')
 script_tag_default = soup_default.find('script', id='__NEXT_DATA__')
 data_json_default = json.loads(script_tag_default.string)
@@ -30,7 +38,7 @@ else:
 cleaned_data = []
 
 for page_number in range(1,total_pages + 1):
-    current_url = f"{URL}&page={page_number}"
+    current_url = f"{URL_w_filters}&page={page_number}"
     response = requests.get(current_url,headers=HEADERS)
 
     if (response.status_code != 200):
