@@ -25,7 +25,7 @@ data_json_default = json.loads(script_tag_default.string)
 if(data_json_default['props']['pageProps']['data']['searchAds']['pagination']['totalPages']):
     total_pages = data_json_default['props']['pageProps']['data']['searchAds']['pagination']['totalPages']
 else:
-    total_pages = 1
+    total_pages = 0
 
 cleaned_data = []
 
@@ -45,7 +45,6 @@ for page_number in range(1,total_pages + 1):
             logging.info(f"Json found")
             data_json = json.loads(script_tag.string)
             ads = data_json['props']['pageProps']['data']['searchAds']['items']
-            print("Pagination details:", data_json['props']['pageProps']['data']['searchAds']['pagination'])
 
             if(ads):
                 logging.info(f"Advertisements scraped")
