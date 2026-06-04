@@ -36,14 +36,10 @@ if(data_json_default['props']['pageProps']['data']['searchAds']['pagination']['t
 else:
     total_pages = 0
 
-# cleaned_data = []
-
 s3_client = boto3.client('s3')
 BUCKET_NAME = "jucygan-otodom-raw-data-bronze"
 
-# for page_number in range(1,total_pages + 1):
-
-for page_number in range(1,5):
+for page_number in range(1,total_pages + 1):
     OBJECT_NAME = f"otodom_raw_data_page_{page_number}.json"
     current_url = f"{URL_w_filters}&page={page_number}"
     response = requests.get(current_url,headers=HEADERS)
@@ -72,33 +68,9 @@ for page_number in range(1,5):
                 )
 
                 logging.info(f"Successfully uploaded {OBJECT_NAME} to S3")
-
-                # for ad in ads:
-                    # data = {}
-                    # data['id'] = ad.get('id')
-                    # data['slug'] = ad.get('slug')
-
-                    # location = ad.get('location')
-                    # if(location and location.get('reverseGeocoding') and len(location.get('reverseGeocoding').get('locations', [])) > 2):
-                    #     data['district'] = location['reverseGeocoding']['locations'][2].get('name')
-                    # else:
-                    #     data['district'] = None
-
-                    # data['roomsNumber'] = ad.get('roomsNumber')
-                    # data['floorNumber'] = ad.get('floorNumber')
-                    # data['pricePerSquareMeter'] = ad.get('pricePerSquareMeter').get('value') if ad.get('pricePerSquareMeter') else None
-                    # data['totalPrice'] = ad.get('totalPrice').get('value') if ad.get('totalPrice') else None
-                    # data['areaInSquareMeters'] = ad.get('areaInSquareMeters')
-                    # data['rentPrice'] = ad.get('rentPrice').get('value') if ad.get('rentPrice') else None
-                    # cleaned_data.append(data)
-                
-                # logging.info(f"Saved {len(cleaned_data)} advertisements in file results.json")
             else:
                 logging.error(f"List of advertisements not found")
         else:
             logging.error(f"Json not found")
     logging.info("Waiting for 2 second before scraping next page...")
     time.sleep(2)
-
-# with open("results.json", "w", encoding="utf-8") as f:
-#     json.dump(cleaned_data, f, indent=4, ensure_ascii=False)
