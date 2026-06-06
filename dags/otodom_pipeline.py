@@ -16,6 +16,11 @@ def launch_scraper():
     sys.path.append('/Users/juliacygan/homeAlert')
     import scraper
 
+def launch_cleanup():
+    import sys
+    sys.path.append('/Users/juliacygan/homeAlert')
+    import cleanup
+
 with DAG(
     'otodom_scraper_pipeline',
     default_args=default_args,
@@ -30,4 +35,9 @@ with DAG(
         python='/Users/juliacygan/homeAlert/.venv/bin/python',
         python_callable=launch_scraper
     )
-    run_scraper
+    run_cleanup = ExternalPythonOperator(
+        task_id='run_otodom_cleanup',
+        python='/Users/juliacygan/homeAlert/.venv/bin/python',
+        python_callable=launch_cleanup
+    )
+    run_scraper >> run_cleanup
